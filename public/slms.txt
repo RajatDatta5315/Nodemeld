@@ -1,0 +1,7 @@
+product: NodeMeld
+type: SaaS Discovery Platform
+url: https://nodemeld.kryv.network
+category: SaaS Directory, Indie Tools, Product Discovery
+audience: Indie hackers, SaaS founders, bootstrapped builders
+network: KRYV Network
+status: Active

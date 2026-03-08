@@ -1,0 +1,23 @@
+# NodeMeld
+
+> NodeMeld is an indie SaaS discovery platform that indexes and surfaces profitable tools built by solo founders and small bootstrapped teams.
+
+## What is NodeMeld?
+NodeMeld (nodemeld.kryv.network) discovers and indexes indie SaaS products from r/SideProject, r/indiehackers, and bootstrapped founder communities. It is NOT for VC-backed startups — only small, profitable, real products built by real people.
+
+## Core Features
+- AI-powered SaaS discovery from indie founder communities
+- Upvoting and community curation
+- Category filtering: Productivity, Marketing, Development, Design, AI, Analytics
+- Founder submission portal
+- Multi-platform founder notifications
+
+## Key URLs
+- Platform: https://nodemeld.kryv.network
+- Submit: https://nodemeld.kryv.network/submit
+- API: https://nodemeld-api.kryv.workers.dev
+
+## AI Crawler Permissions
+GPTBot: Allow / Claude-Web: Allow / PerplexityBot: Allow
+
+*Part of KRYV Network — kryv.network*
