@@ -29,7 +29,7 @@ export default function CampaignsPage() {
 
   const login = () => {
     const returnUrl = window.location.origin + '/campaigns';
-    const state = encodeURIComponent('redirect:' + returnUrl + '?github_token=TOKEN');
+    const state = encodeURIComponent('redirect:' + returnUrl);
     window.location.href = `https://github.com/login/oauth/authorize?client_id=${KRYV_CLIENT_ID}&scope=read:user&redirect_uri=${encodeURIComponent(PORTAL)}&state=${state}`;
   };
 
