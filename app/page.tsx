@@ -53,12 +53,17 @@ const TAG_COLORS: Record<string, string> = {
 function ProductCard({ p, onUpvote, editToken = '', editSlug = '', editForm = {}, setEditStatus = () => {}, setShowEdit = () => {} }: { p: any; onUpvote: (slug: string) => void; editToken?: string; editSlug?: string; editForm?: any; setEditStatus?: (s: string) => void; setShowEdit?: (b: boolean) => void }) {
   const color = TAG_COLORS[p.category] || '#6b7280';
   const handleClaim = (slug: string) => {
-    // Redirect to KRYV GitHub OAuth — callback will return token to this page
-    const returnUrl = window.location.origin + '?claim_slug=' + encodeURIComponent(slug);
-    const state = encodeURIComponent('redirect:' + returnUrl);
-    const KRYV_CLIENT_ID = 'Ov23li2oOtJSQKCUwIRr';
-    const PORTAL = 'https://velqa.kryv.network/portal';
-    window.location.href = `https://github.com/login/oauth/authorize?client_id=${KRYV_CLIENT_ID}&scope=read:user&redirect_uri=${encodeURIComponent(PORTAL)}&state=${state}`;
+    const token = window.prompt('Enter your GitHub Personal Access Token to claim this listing:\n(github.com/settings/tokens → New classic token → read:user scope)');
+    if (!token) return;
+    const username = window.prompt('Enter your GitHub username:');
+    if (!username) return;
+    fetch(`${API}/api/claim`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ slug, github_token: token })
+    }).then(r => r.json()).then(data => {
+      if (data.success) { window.location.href = window.location.origin + `?github_token=${token}&github_user=${username}&claim_slug=${slug}`; }
+      else alert('Claim failed: ' + (data.error || 'Unknown error'));
+    }).catch(() => alert('Network error'));
   };
 
   const handleEdit = async () => {
@@ -117,32 +122,7 @@ export default function Home() {
   const [showEdit, setShowEdit] = useState(false);
   const [githubUser, setGithubUser] = useState('');
 
-  // Handle KRYV OAuth callback — token is passed via URL params after GitHub auth
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get('github_token');
-    const user = params.get('github_user');
-    const claimSlug = params.get('claim_slug');
-    if (token) {
-      setEditToken(token);
-      setGithubUser(user || '');
-      if (claimSlug) {
-        // Auto-claim the listing
-        fetch(`${API}/api/claim`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ slug: claimSlug, github_token: token })
-        }).then(r => r.json()).then(data => {
-          if (data.success) {
-            setEditSlug(claimSlug);
-            setShowEdit(true);
-          }
-        });
-      }
-      // Clean URL
-      window.history.replaceState({}, '', window.location.pathname);
-    }
-  }, []);
+  // GitHub OAuth removed — token handled via prompt()
 
   useEffect(() => {
     fetch(`${API}/api/products`).then(r => r.json())
@@ -173,12 +153,17 @@ export default function Home() {
   });
 
   const handleClaim = (slug: string) => {
-    // Redirect to KRYV GitHub OAuth — callback will return token to this page
-    const returnUrl = window.location.origin + '?claim_slug=' + encodeURIComponent(slug);
-    const state = encodeURIComponent('redirect:' + returnUrl);
-    const KRYV_CLIENT_ID = 'Ov23li2oOtJSQKCUwIRr';
-    const PORTAL = 'https://velqa.kryv.network/portal';
-    window.location.href = `https://github.com/login/oauth/authorize?client_id=${KRYV_CLIENT_ID}&scope=read:user&redirect_uri=${encodeURIComponent(PORTAL)}&state=${state}`;
+    const token = window.prompt('Enter your GitHub Personal Access Token to claim this listing:\n(github.com/settings/tokens → New classic token → read:user scope)');
+    if (!token) return;
+    const username = window.prompt('Enter your GitHub username:');
+    if (!username) return;
+    fetch(`${API}/api/claim`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ slug, github_token: token })
+    }).then(r => r.json()).then(data => {
+      if (data.success) { window.location.href = window.location.origin + `?github_token=${token}&github_user=${username}&claim_slug=${slug}`; }
+      else alert('Claim failed: ' + (data.error || 'Unknown error'));
+    }).catch(() => alert('Network error'));
   };
 
   const handleEdit = async () => {
