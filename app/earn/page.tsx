@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'https://nodemeld-api.kryv.workers.dev';
 const KRYV_CLIENT_ID = 'Ov23li2oOtJSQKCUwIRr';
-const PORTAL = 'https://velqa.kryv.network/portal';
+// GitHub OAuth removed — using PAT prompt
 
 interface Campaign {
   id: number;
@@ -55,8 +55,12 @@ export default function EarnPage() {
 
   const login = () => {
     const returnUrl = window.location.origin + '/earn';
-    const state = encodeURIComponent('redirect:' + returnUrl);
-    window.location.href = `https://github.com/login/oauth/authorize?client_id=${KRYV_CLIENT_ID}&scope=read:user&redirect_uri=${encodeURIComponent(PORTAL)}&state=${state}`;
+    const pat = window.prompt('Enter your GitHub Personal Access Token:\n(github.com/settings/tokens → New classic token → check: read:user)');
+    if (pat) {
+      localStorage.setItem('kryv_gh_token', pat);
+      localStorage.setItem('github_token', pat);
+      window.location.reload();
+    }
   };
 
   const startTrial = async (campaignId: number, productUrl: string) => {

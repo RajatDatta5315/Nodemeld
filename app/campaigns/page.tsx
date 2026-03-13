@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 const API = process.env.NEXT_PUBLIC_API_URL || 'https://nodemeld-api.kryv.workers.dev';
 const KRYV_CLIENT_ID = 'Ov23li2oOtJSQKCUwIRr';
-const PORTAL = 'https://velqa.kryv.network/portal';
+// GitHub OAuth removed — using PAT prompt
 
 interface Campaign { id: number; title: string; cpu: number; budget: number; budget_spent: number; status: string; product_slug: string; milestone: string; }
 interface Product { slug: string; name: string; }
@@ -29,8 +29,12 @@ export default function CampaignsPage() {
 
   const login = () => {
     const returnUrl = window.location.origin + '/campaigns';
-    const state = encodeURIComponent('redirect:' + returnUrl);
-    window.location.href = `https://github.com/login/oauth/authorize?client_id=${KRYV_CLIENT_ID}&scope=read:user&redirect_uri=${encodeURIComponent(PORTAL)}&state=${state}`;
+    const pat = window.prompt('Enter your GitHub Personal Access Token:\n(github.com/settings/tokens → New classic token → check: read:user)');
+    if (pat) {
+      localStorage.setItem('kryv_gh_token', pat);
+      localStorage.setItem('github_token', pat);
+      window.location.reload();
+    }
   };
 
   const loadMyData = async (t: string) => {
